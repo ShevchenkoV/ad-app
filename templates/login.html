@@ -1,0 +1,31 @@
+<ion-view title="Ads" hide-back-button="true" hide-nav-bar="true">
+
+    <ion-content has-header="true" "padding="true">
+        
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Username</span>
+                <input type="text">
+                    </label>
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input type="password">
+            </label>
+            <label class="item">
+                <button class=" button  button-block button-positive" ng-click="">
+               Login
+                </button>
+            </label>
+
+        </div>
+        <div style="text-align:center;">
+        <p>or</p>
+        <button class="button  button-positive login-button" ng-click="facebookLogin()">
+        <i class="icon ion-social-facebook"></i>
+        &nbsp;Login with Facebook
+        </button>
+        </div>
+
+    </ion-content>
+
+</ion-view>

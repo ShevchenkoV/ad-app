@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>ads</title>
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+</head>
+
+<body ng-app="ads">
+
+<ion-nav-bar class="bar nav-title-slide-ios7" style="background:#FF7474;">
+    <ion-nav-back-button class="button-icon ion-arrow-left-c">
+    </ion-nav-back-button>
+</ion-nav-bar>
+
+<ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+
+<script id="sign-in.html" type="text/ng-template">
+    <ion-view title="Sign-In ads" class="bgt-background">
+    <ion-content>
+    <div class="list ">
+    <label class="item item-input bgt-background">
+    <span class="input-label">Email</span>
+    <input type="text" ng-model="user.email">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">Password</span>
+    <input type="password" ng-model="user.password">
+    </label>
+    </div>
+    <input type="checkbox" ng-model="user.remember">
+    <div class="padding">
+    <button class="button button-block button-positive" ng-click="submit()">
+    Sign-In {{user.checkbox}}
+    </button>
+    <p class="text-center">
+    <a href="#/forgot-password">Forgot password</a>
+    </p>
+    <p class="text-center">
+    <a href="#/registration">Registration</a>
+    </p>
+    </div>
+    <div style="text-align:center;">
+    <p>or</p>
+    <button class="button  button-positive login-button" ng-click="signIn()">
+    <i class="icon ion-social-facebook"></i>
+    &nbsp;Login with Facebook
+    </button>
+    </div>
+    
+    <div>
+    <a href="#/tab/home">Button for development login</a></div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="forgot-password.html" type="text/ng-template">
+    <ion-view title="Forgot Password">
+        <ion-content padding="true">
+        <p>
+            Return to <a href="#/sign-in">Sign-In</a>.
+        </p>
+        </ion-content>
+    </ion-view>
+    </script>
+
+<script id="registration.html" type="text/ng-template">
+    <ion-view title="Registration">
+    <ion-content padding="true">
+    <div class="list ">
+    <label class="item item-input bgt-background">
+    <span class="input-label">Username</span>
+    <input type="text" ng-keyup="checkEmail()" data-ng-model="user.email">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">Password</span>
+    <input type="text" data-ng-model="user.password">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">name </span>
+    <input type="text" data-ng-model="user.firstName">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">last name</span>
+    <input type="text" data-ng-model="user.lastName">
+    </label>
+    </div>
+    {{user}}
+    <div class="padding">
+    <button class="button button-block button-positive" ng-click="submit()">
+    register
+    </button>
+    </div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="registration2.html" type="text/ng-template">
+    <ion-view title="Registration2">
+    <ion-content padding="true">
+    <div class="list ">
+    <label class="item item-input bgt-background">
+    <span class="input-label">Date of birth</span>
+    <input type="text" data-ng-model="user.birthday">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">Country</span>
+    <input type="text" data-ng-model="user.country">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">Your highest education</span>
+    <input type="text" data-ng-model="user.education">
+    </label>
+    <label class="item item-input bgt-background">
+    <span class="input-label">What's your sex</span>
+    <input type="text" data-ng-model="user.sex">
+    </label>
+    </div>
+    {{user}}
+    <div class="padding">
+    <button class="button button-block button-positive" ng-click="submit()">
+    register
+    </button>
+    </div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="tabs.html" type="text/ng-template">
+    <ion-tabs class="tabs-icon-top bgt-background">
+    
+    <ion-tab title="Home" icon="ion-home" href="#/tab/home">
+    <ion-nav-view name="home-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Profile" icon="ion-ios7-information" href="#/tab/profile">
+    <ion-nav-view name="profile-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Facebook"  icon="ion-social-facebook" href="#/tab/facebook">
+      <ion-nav-view name="facebook-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Settings" icon="ion-ios7-gear" href="#/tab/settings">
+    <ion-nav-view name="settings-tab"></ion-nav-view>
+    </ion-tab>
+    
+
+    
+    </ion-tabs>
+    </script>
+
+<script id="home.html" type="text/ng-template">
+    <ion-view title="Home">
+    <ion-content padding="true">
+    <div class="list ">
+    
+    <div class="item item-divider bgt-background" style="text-align:center;">
+    Choose type of ad
+    </div>
+
+    <a class="item item-thumbnail-left bgt-background" style="min-height:60px;"href="#/home-selected" ng-repeat="i in [1,2,3,4]">
+    <img src="img/ionic.png" style="height:50px;width:50px;">
+    <h2>Pretty Hate Machine</h2>
+    <p>Nine Inch Nails</p>
+    </a>
+    
+    </div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="facebook.html" type="text/ng-template">
+    <ion-view title="Facebook">
+    <ion-content padding="true">
+
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="home-selected.html" type="text/ng-template">
+    <ion-view title="Ads">
+    <ion-content padding="true" class="bgt-background">
+
+
+<video width="320" height="240" controls>
+<source src="http://77.121.81.147/public/video/bunny.mp4" type="video/mp4">
+<source src="http://77.121.81.147/public/video/bunny.mp4" type="video/ogg">
+Your browser does not support the video tag.
+</video>
+
+<a class="button icon-left ion-chevron-left button-clear button-dark" href="#/home">Back</a>
+    </ion-content>
+    <ion-footer-bar align-title="left" class="bar-assertive">
+    <ion-tabs class="tabs-icon-top bgt-background">
+    
+    <ion-tab title="Home" icon="ion-home" href="#/tab/home">
+    <ion-nav-view name="home-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Profile" icon="ion-ios7-information" href="#/tab/profile">
+    <ion-nav-view name="profile-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Facebook"  icon="ion-social-facebook" href="#/tab/facebook">
+    <ion-nav-view name="facebook-tab"></ion-nav-view>
+    </ion-tab>
+    
+    <ion-tab title="Settings" icon="ion-ios7-gear" href="#/tab/settings">
+    <ion-nav-view name="settings-tab"></ion-nav-view>
+    </ion-tab>
+    
+
+    
+    </ion-tabs>
+    </ion-footer-bar>
+    </ion-view>
+    </script>
+
+<script id="settings.html" type="text/ng-template">
+    <ion-view title="Settings">
+    <ion-content padding="true">
+    <div style="text-align:center;">
+    <img src="img/ionic.png"/>
+    </div>
+    <button class="button button-full button-assertive">
+    Full</button>
+    <div class="row">
+    <div class="col">
+        <button class="button button-full button-assertive">
+            Full</button>
+    </div>
+    <div class="col">
+        <button class="button button-full button-assertive">
+            Full</button>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col">
+        <button class="button button-full button-assertive">
+            Full</button>
+    </div>
+    <div class="col">
+        <button class="button button-full button-assertive">
+        Full</button>
+    </div>
+    </div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script id="profile.html" type="text/ng-template">
+    <ion-view title="Profile">
+    <ion-content padding="true">
+    <div class="list">
+    <label class="item item-input bgt-background" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
+    <span class="input-label">Sport</span>
+    <input type="text">
+    </label>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+    <button class="button button-large" style="width:40%;background:#FF7474;color:#FDFDFD;">
+    Submit
+    </button>
+    <button class="button button-large" style="width:40%;background:#FF7474;color:#FDFDFD;">
+    Edit
+    </button>
+    </div>
+    </ion-content>
+    </ion-view>
+    </script>
+
+<script src="lib/ionic/js/ionic.bundle.js"></script>
+<script src="cordova.js"></script>
+<script src="js/app.js"></script>
+<script src="js/openfb-angular.js"></script>
+<script src="js/controllers.js"></script>
+
+</body>
+</html>
