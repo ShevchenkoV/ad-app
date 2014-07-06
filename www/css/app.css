@@ -1,0 +1,164 @@
+/* Your app's CSS, go crazy, make it your own */
+
+.ionic-logo {
+  display: block;
+  margin: 15px auto;
+  width: 96px;
+  height: 96px;
+}
+
+.item-body > p {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+.scroll-content{
+    background: url('../img/bgt.png') no-repeat;
+    background-size: 100%;
+}
+.login-button{
+    margin:0;
+    width:90%;
+}
+.ion-content
+{
+  background-color: transparent;
+}
+.bgt-background{
+    background:url('../img/bgt.png') no-repeat !important;
+    background-size:100% !important;
+}
+.tabs{
+    background:url('../img/bgt.png') no-repeat !important;
+    background-size:100% !important;
+    color: #E40909;
+}
+.wrap {
+    overflow: hidden;
+    margin: 10px;
+}
+.box {
+    float: left;
+    position: relative;
+    width: 20%;
+    padding-bottom: 20%;
+}
+.boxInner {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    overflow: hidden;
+}
+.boxInner img {
+    width: 100%;
+}
+.boxInner .titleBox {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: -50px;
+    background: #000;
+    background: rgba(0, 0, 0, 0.5);
+    color: #FFF;
+    padding: 10px;
+    text-align: center;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {
+    margin-bottom: 0;
+}
+@media only screen and (max-width : 480px) {
+    /* Smartphone view: 1 tile */
+    .box {
+        width: 33.3%;
+        padding-bottom: 33.3%;
+    }
+}
+@media only screen and (max-width : 650px) and (min-width : 481px) {
+    /* Tablet view: 2 tiles */
+    .box {
+        width: 50%;
+        padding-bottom: 50%;
+    }
+}
+
+.bar h1{
+color:#F6F3F3;
+}
+
+form i.icon.error {
+  color: #ef4e3a; }
+
+form input + i.icon.error {
+  display: none;
+  margin-left: 8px; }
+
+form .has-error {
+  border-left: 3px solid #cc2511; 
+  border-right: 3px solid #cc2511; 
+}
+
+form .has-success {
+  border-left: 3px solid #3d8b3d; 
+  border-right: 3px solid #3d8b3d; 
+}
+
+
+
+.validated {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px;
+  width: 100%; }
+
+.validated .input-label {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 30%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 30%;
+  -ms-flex: 0 0 30%;
+  flex: 0 0 30%;
+  max-width: 30%; 
+}
+
+.validated input {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 60%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 60%;
+  -ms-flex: 0 0 60%;
+  flex: 0 0 60%;
+  max-width: 60%; 
+}
+
+.validated error {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 10%;
+  -moz-box-flex: 0;
+  -moz-flex: 0 0 10%;
+  -ms-flex: 0 0 10%;
+  flex: 0 0 10%;
+  max-width: 10%; 
+}
+
+.slider{
+    position:inherit;
+    padding-left:10px;
+}
+.slider-pager{
+    bottom:80px;
+    left:0px;
+}
+.checkbox-style{
+    padding-top:5px;
+    padding-left:5px;
+}
