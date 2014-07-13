@@ -1,2 +1,2 @@
-d:\ads\t\platforms\android\ant-build\AndroidManifest.xml : \
-d:\ads\t\platforms\android\AndroidManifest.xml \
+D:\ads\AD\platforms\android\ant-build\AndroidManifest.xml : \
+D:\ads\AD\platforms\android\AndroidManifest.xml \

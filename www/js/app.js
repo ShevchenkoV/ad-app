@@ -1,25 +1,48 @@
 angular.module('ads', ['ionic', 'openfb', 'ngResource'])
 
 .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
-        $rootScope.globalServerUrl="http://77.121.81.147";
+        $rootScope.globalServerUrl="http://lodge39.com";
+      //$rootScope.globalServerUrl="http://77.121.81.147";
+      $rootScope.logged=localStorage.getItem("logged");
         OpenFB.init('803761662981098');
 
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
                 StatusBar.styleDefault();
             }
+          document.addEventListener("backbutton", onBackKeyDown, false);
 
         });
 
-     /* $rootScope.$on('$stateChangeStart', function(event, toState) {
-        if (toState.name !== "signin" &&  localStorage.getItem('password')===null) {
 
-          console.log('not logged');
-          $state.go('signin');
-          event.preventDefault();
+      $rootScope.$on('$stateChangeStart', function(event, toState) {
+          if (toState.name !== "signin" && toState.name !== "forgotpassword" && toState.name !== "registration" && localStorage.getItem("token")===null) {
+
+            $state.go('signin');
+           // event.preventDefault();
+
+          }
+      });
+      function onBackKeyDown() {
+        if($state('registration')){$state.go('signin');}
+        if($state('registration2')){$state.go('registration');}
+        if(localStorage.getItem("token")===null){
+          if(navigator.app){
+            navigator.app.exitApp();
+          }else if(navigator.device){
+            navigator.device.exitApp();
+          }
         }
-      });*/
-
+      };
+      $rootScope.logout=function(){
+        localStorage.setItem("logged", false);
+        $state.go('signin');
+        if(navigator.app){
+          navigator.app.exitApp();
+        }else if(navigator.device){
+          navigator.device.exitApp();
+        }
+      };
        /* $rootScope.$on('$stateChangeStart', function(event, toState) {
             if (toState.name !== "signin" &&  !$window.sessionStorage['fbtoken']) {
                 $state.go('signin');
@@ -104,6 +127,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
             $scope.word=/^[a-zA-Z0-9]+$/; //password regexp
             $scope.emailPattern=/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
             $scope.user.remember=false;
+            $scope.text=" ";
             var url=$rootScope.globalServerUrl+'/profile/login/';
 
             $scope.signIn = function() {
@@ -116,10 +140,13 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                    alert('OpenFB login failed');
                   });
             };
-          
+
             $scope.submit=function(){
               var data=encodeURIComponent(JSON.stringify($scope.user));
               localStorage.setItem("password",$scope.user.password);
+              if(localStorage.getItem("logged")===null){
+         window.plugins.toast.show('Loading...', 'short', 'center');
+              }
               $http({
                   url: url,
                   method: "POST",
@@ -129,42 +156,52 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                   if(data.login==="true"){
                     localStorage.setItem("email", data.email);  // work with it
                     localStorage.setItem("token", data.token);  // work with it
-                  /*  if($scope.user.remember){
 
-                    } */
+                    if($scope.user.remember){
+                      localStorage.setItem("logged","true");
+                    }
 
                      $state.go('tabs.home');
                   }
                   else{
-                    $state.go('signin');
+  window.plugins.toast.show('Incorrect login or password', 'long', 'bottom');
+                   // $state.go('signin');
                   }                    
-                });
+                }).error(function(){
+ window.plugins.toast.show('Connection problems', 'long', 'bottom');
+              });
               };
+            if(localStorage.getItem("logged")==="true"){
+              $scope.user.password=localStorage.getItem("password");
+              $scope.user.email=localStorage.getItem("email");
+              $scope.submit();
+            }
 
             })
 
-.controller('ForgotCtrl',function($scope, $http, $rootScope){
-     $scope.request=function(){
-       var url=$rootScope.globalServerUrl+'/forgotpasswordurl';   //TALK ABOUT IT
-       var data=encodeURIComponent(JSON.stringify($scope.email));
-
+.controller('ForgotCtrl',function($scope, $http,$state, $rootScope){
+     $scope.request=function(email){
+       var url=$rootScope.globalServerUrl+'/profile/resetPassword/';
+       var data=email;
        $http({
          url: url,
          method: "POST",
-         data: 'data='+data
+         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+         data: 'data='+JSON.stringify(data)
        }).success(function(data){
-         if(data.SERVERRESPONSE==="true"){
-           alert('Password sended to email');
+         if(!data.resetPassword){
+           window.plugins.toast.show('Sorry, your email not founded in database', 'long', 'bottom');
          }
          else{
-           alert('Email not found');
+           window.plugins.toast.show('Your new password sended to your email', 'long', 'bottom');
+           $state.go('signin');
          }
        });
      };
 
     })
     .controller('LogoutCtrl',function($scope,$state){
-      $scope.logout=function(){
+      $scope.clear=function(){
         localStorage.clear();
         $state.go('signin');
       };
@@ -215,17 +252,16 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
        }
    })
 
-.controller('ProfileTabCtrl', function($scope, $http, ProfileService, $q, $rootScope, $filter) {
+.controller('ProfileTabCtrl', function($scope, $http, ProfileService,ajaxServices, $q,$state,$timeout, $rootScope, $filter) {
     var data={};
     var url= $rootScope.globalServerUrl;
     $scope.user={};
-
     data.token=localStorage.getItem("token");
     data.email=localStorage.getItem("email");
       $scope.CountryList = $http({method:"GET",url: url+'/tag/getCountries'}) ;
       $scope.EducationList = $http({method:"GET",url:url+'/tag/getEducations'});
       $scope.SexList = $http({method:"GET",url:url+'/tag/getSex'});
-      $scope.CityList = [{id:0,name:"NY"},{id:1,name:"NY"},{id:2,name:"NY"},{id:3,name:"NY"}];
+      $scope.ProfessionList = $http({method:"GET",url:url+'/tag/getProfessions'});
       $scope.userData = $http({
           url: url+"/profile/getProfile",
           method: "POST",
@@ -233,24 +269,47 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
           data: "data="+JSON.stringify(data)
       });
 
-    $q.all([$scope.CountryList, $scope.EducationList, $scope.SexList, $scope.userData]).then(function(res) {
+
+
+
+    $q.all([$scope.CountryList, $scope.EducationList, $scope.SexList, $scope.userData,$scope.ProfessionList]).then(function(res) {
 
       $scope.CountryList=res[0].data;
       $scope.EducationList=res[1].data;
-      //$scope.EducationList=[{id:0,education:"asd"},{id:1,education:"asd"},{id:2,education:"asd"},{id:3,education:"asd"}];
       $scope.SexList=res[2].data;
       $scope.userData=res[3].data;
+      $scope.ProfessionList=res[4].data;
+      $scope.CityList=ajaxServices.getProjects($scope.userData[0].country).success(function (data) {
+        $scope.CityList=data;
+        $scope.user.city=$scope.CityList[findById($scope.CityList,$scope.userData[0].city)].id;
+      });
 
-
-      $scope.user.date= $filter('date')($scope.userData[0].birthday*1000, "yyyy-MM-dd");
+      $scope.user.date = $scope.userData[0].birthday?$filter('date')($scope.userData[0].birthday*1000, "yyyy-MM-dd"):"";
       $scope.user.country=$scope.CountryList[$scope.userData[0].country-1];
       $scope.user.education=$scope.EducationList[$scope.userData[0].education-1];
       $scope.user.sex=$scope.SexList[$scope.userData[0].sex];
       $scope.user.first_name=$scope.userData[0].first_name;
       $scope.user.last_name=$scope.userData[0].last_name;
-      $scope.user.city=$scope.CityList;//$scope.CityList[$scope.userData[0].city-1];
-      $scope.user.street="selected street";//$scope.userData[0].street;
+      $scope.user.profession=$scope.ProfessionList[$scope.userData[0].profession-1];
+      $scope.user.street=$scope.userData[0].street;
+
+      function findById(source, id) {
+        for (var i = 0; i < source.length; i++) {
+          if (source[i].id === id) {
+            return i;//source[i];
+          }
+        }
+        throw "Couldn't find object with id: " + id;
+      };
     });
+
+      $scope.setCountry=function(id){
+        $http({method:"GET",url:url+'/tag/getCities/'+id})   //ready
+            .success(function(data){
+              $scope.CityList=data;
+            });
+      }
+
 
     $scope.submit=function(){
       var profileData={};
@@ -259,15 +318,16 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
       profileData.id=localStorage.getItem('id');
       profileData.country=$scope.user.country?$scope.user.country.id:"";
       profileData.education=$scope.user.education?$scope.user.education.id:"";
+      profileData.profession=$scope.user.profession?$scope.user.profession.id:"";
       profileData.sex=$scope.user.sex?$scope.user.sex.id:"";
       profileData.email=data.email;
       profileData.token=data.token;
       profileData.first_name=$scope.user.first_name?$scope.user.first_name:"";
       profileData.last_name=$scope.user.last_name?$scope.user.last_name:"";
-
+console.log($scope.user.education);
 
       profileData.street=$scope.user.street?$scope.user.street:"";
-      profileData.city=$scope.user.city?$scope.user.city.id:"";
+      profileData.city=$scope.user.city?$scope.user.city:"";
 
       console.log(profileData);
       $http({
@@ -275,8 +335,14 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
           method: "POST",
           headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
           data: "data="+encodeURIComponent(JSON.stringify(profileData))
+      }).success(function(){
+      window.plugins.toast.show('Profile updated', 'short', 'center');
+        $state.go('tabs.home');
+      }).error(function(){
+       window.plugins.toast.show('Error', 'short', 'center');
       });
     };
+
 
 })
 
@@ -318,6 +384,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                 else{
                     $http.get(url+data).success(function(data){
                       localStorage.setItem("id",data.id);
+                      localStorage.setItem("email",$scope.user.email);
                     });
                 $location.path('/registration2');
                 }
@@ -325,10 +392,10 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                 
             })
 
-.controller('Registration2Ctrl', function($scope, $http, IdService ,ProfileService, $rootScope, $state) {
+.controller('Registration2Ctrl', function($scope, $http, IdService ,ProfileService, $rootScope, $state,$timeout) {
             $scope.user={"street":""};
 
-      $scope.CityList=[{id:0,name:"NY"},{id:1,name:"NY"},{id:2,name:"NY"},{id:3,name:"NY"}];
+
             var serverUrl=$rootScope.globalServerUrl;
             $http({method:"GET",url: serverUrl+'/tag/getCountries'})   //ready
               .success(function(data){
@@ -345,26 +412,39 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                 $scope.SexList=data; 
               });
 
-            /*$http({method:"GET",url:serverUrl+'/tag/getSex'})   //CITY
+            $http({method:"GET",url:serverUrl+'/tag/getProfessions'})
                 .success(function(data){
-                  $scope.SexList=data;
-                });*/
-
+                  $scope.ProfessionList=data;
+                });
+      $scope.setCountry=function(id){
+        $http({method:"GET",url:serverUrl+'/tag/getCities/'+id})   //ready
+            .success(function(data){
+              $scope.CityList=data;
+            });
+      }
       $scope.submit=function(){
                 var req={};
                 req.id=localStorage.getItem('id');
+                req.email=localStorage.getItem('email');
                 req.country=$scope.user.country?$scope.user.country.id:"";
                 req.birthday=$scope.user.date?Math.round(+new Date($scope.user.date)/1000):"";
                 req.education=$scope.user.education?$scope.user.education.id:"";
                 req.sex=$scope.user.sex?$scope.user.sex.id:"";
                 req.city=$scope.user.city?$scope.user.city.id:"";
+                req.profession=$scope.user.profession?$scope.user.profession.id:"";
                 req.street=$scope.user.street;
                 req.skip="false";
                 console.log(req);
               var data=encodeURIComponent(JSON.stringify(req));
               var url=serverUrl+'/profile/registrationSecondStep/';
-              $http.get(url+data);
-              $state.go('signin');
+              $http.get(url+data).success(function(data){
+
+                localStorage.setItem("token",data.login.token);
+              });
+              $timeout(function(){
+                $state.go('tabs.home');
+              },1000);
+
             } 
             $scope.skip=function(){
                var req={};
@@ -405,117 +485,135 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
    $scope.minPlayingTime =  HomeService.getMediaDuration();
    $scope.mediaId=HomeService.getMediaId();
    var readyState=false;
+   var mytimeout;
    var data={};
-   var AdText=document.getElementById("AdText");
+   var AdTextImage=document.getElementById("AdTextImage");
+      var AdTextVideo=document.getElementById("AdTextVideo");
    $scope.onTimeout = function(){
       $scope.counter++;
       console.log($scope.counter);
-      mytimeout = $timeout($scope.onTimeout,1000);
+      var mytimeout = $timeout($scope.onTimeout,1000);
     };
 
   if(HomeService.getMediaType()==="picture"){
     $scope.image="true";
+    $scope.viewName="Picture";
     $scope.source=$sce.trustAsResourceUrl(HomeService.getVideoUrl()); 
     var init=function(){
 
       $timeout(function(){
-        
-              var adUrl=$rootScope.globalServerUrl+"/main/getAdQuestion/";
-              $http.get(adUrl+$scope.mediaId).then(function(response){
-               $scope.image="false";
-               AdText.remove();
-               $scope.questions=response.data.question;
-               $scope.answer=response.data.answers;
-               $scope.click=function(id){
-                data.ad=$scope.mediaId;
-                data.answer=id;
-                data.email=localStorage.getItem("email");
-                data.token=localStorage.getItem("token");
-                console.log(data);
-                  $http({
-                    url: $rootScope.globalServerUrl+"/main/hit",
-                    method: "POST",
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-                    data: "data="+JSON.stringify(data)
-                  }).success(function(data){
-                      readyState=true;
-                      $state.go('tabs.home');
-                  });
-               }
-              });
+
+        var adUrl = $rootScope.globalServerUrl + "/main/getAdQuestion/";
+        $http.get(adUrl + $scope.mediaId).then(function (response) {
+         $scope.image="false";
+          $scope.questions = response.data.question;
+          $scope.answer = response.data.answers;
+          $scope.click = function (id) {
+            data.ad = $scope.mediaId;
+            data.answer = id;
+            data.email = localStorage.getItem("email");
+            data.token = localStorage.getItem("token");
+            $http({
+              url: $rootScope.globalServerUrl + "/main/hit",
+              method: "POST",
+              headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+              data: "data=" + JSON.stringify(data)
+            }).success(function (data) {
+              readyState = true;
+              $state.go('homeselected');
+            });
+          }
+        });
       },$scope.minPlayingTime*1000);
     };
 
     init();
   }
   else{
-   
-	if(device.platform==="Android"){  
-	 $scope.video="false";
-		alert(device.platform);
-		var mytimeout = $timeout($scope.onTimeout,1000);
-		VideoPlayer.play("http://html5demos.com/assets/dizzy.mp4");
-		
-		
-	}
-	else{   //not andoid
-	  $scope.video="true";
-	  $scope.source = $sce.trustAsResourceUrl(HomeService.getVideoUrl());
-      $timeout(function() { 
+    if(device.platform==="Android"){
+      $scope.video="false";
+      VideoPlayer.play(HomeService.getVideoUrl());
+      var adUrl = $rootScope.globalServerUrl + "/main/getAdQuestion/";
+      $http.get(adUrl + $scope.mediaId).then(function (response) {
 
+        $scope.questions = response.data.question;
+        $scope.answer = response.data.answers;
+        $scope.click = function (id) {
+          data.ad = $scope.mediaId;
+          data.answer = id;
+          data.email = localStorage.getItem("email");
+          data.token = localStorage.getItem("token");
+          $http({
+            url: $rootScope.globalServerUrl + "/main/hit",
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            data: "data=" + JSON.stringify(data)
+          }).success(function (data) {
+            readyState = true;
+            $state.go('homeselected');
+          });
+        }
+      });
+
+
+    }
+    else {   //not andoid
+      $scope.video = "true";
+      $scope.viewName="Video";
+      $scope.source = $sce.trustAsResourceUrl(HomeService.getVideoUrl());
+
+      $timeout(function () {
         var video = document.getElementById("vid");
-          video.addEventListener('click',function(){
-              video.play();
-               var mytimeout = $timeout($scope.onTimeout,1000);
-          },false);
 
-        
-        video.addEventListener("pause", function(){
-            if($scope.counter>=$scope.minPlayingTime){
-                $timeout.cancel(mytimeout);
-                $scope.counter=0;
-              
-              video.remove();
-
-              var adUrl=$rootScope.globalServerUrl+"/main/getAdQuestion/";
-              $http.get(adUrl+$scope.mediaId).then(function(response){
-              
-               $scope.questions=response.data.question;
-               $scope.answer=response.data.answers;
-               $scope.click=function(id){
-                data.ad=$scope.mediaId;
-                data.answer=id;
-                data.email=localStorage.getItem("email");
-                data.token=localStorage.getItem("token");
-                console.log(data);
-                  $http({
-                    url: $rootScope.globalServerUrl+"/main/hit",
-                    method: "POST",
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-                    data: "data="+JSON.stringify(data)
-                  }).success(function(data){
-                      readyState=true;
-                      $state.go('tabs.home');
-                  });
-               }
-              });
-            }
-            else{
-               $timeout.cancel(mytimeout);
-            }
-           
+        video.addEventListener('play', function () {
+          video.play();
+          mytimeout = $timeout($scope.onTimeout, 1000);
         }, false);
 
 
-
-      },500);
-	  }
-
+        video.addEventListener("pause", function () {
+          if ($scope.counter >= $scope.minPlayingTime) {
+            $timeout.cancel(mytimeout);
+            $scope.counter = 0;
+             // video.remove();
+              $scope.video=false;
+              asd();
+          }
+          else {
+            $timeout.cancel(mytimeout);
+          }
+        }, false);
+      }, 500);
+    }
  };
+function asd(){
+            var adUrl = $rootScope.globalServerUrl + "/main/getAdQuestion/";
+            $http.get(adUrl + $scope.mediaId).then(function (response) {
 
+              $scope.questions = response.data.question;
+              $scope.answer = response.data.answers;
+              $scope.click = function (id) {
+                data.ad = $scope.mediaId;
+                data.answer = id;
+                data.email = localStorage.getItem("email");
+                data.token = localStorage.getItem("token");
+                console.log(data);
+                $http({
+                  url: $rootScope.globalServerUrl + "/main/hit",
+                  method: "POST",
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                  data: "data=" + JSON.stringify(data)
+                }).success(function (data) {
+                  readyState = true;
+                  $state.go('tabs.home');
+                });
+              }
+            });
+};
     $scope.$on('$locationChangeStart', function (event, next, current) {
        //console.log(readyState);
         if (!readyState) {
+
           event.preventDefault();
         }
 
@@ -635,4 +733,19 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
         start = +start; //parse to int
         return input.slice(start);
     }
-});
+})
+    .factory('ajaxServices',  function ($http,$rootScope) {
+      var url = $rootScope.globalServerUrl;
+
+
+        return {
+          getProjects : function (id) {
+            return $http({method: "GET", url: url + '/tag/getCities/' + id});
+          }
+        }
+
+    })
+
+;
+
+

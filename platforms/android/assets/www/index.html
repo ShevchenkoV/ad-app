@@ -6,6 +6,7 @@
     <title>ads</title>
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
+ <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
 </head>
 
 <body ng-app="ads">
@@ -17,11 +18,16 @@
 <ion-nav-view animation="slide-left-right"></ion-nav-view>
 
 <script id="sign-in.html" type="text/ng-template">
+
     <ion-view title="Sign-In ads" class="bgt-background">
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content>
     <form name="myForm" novalidate>
       <div class="list ">
-        <label class="item item-input  validated bgt-background">
+        <label class="item item-input  validated bgt-background " >
         <span class="input-label">Email</span>
         <input type="text" name="email" ng-model="user.email" ng-pattern="emailPattern" required>
         </label>
@@ -30,11 +36,12 @@
         <span class="input-label">Password</span>
         <input type="password" name="password" ng-model="user.password" ng-minlength="6" ng-pattern="word" required>
         </label>
+
       </div>
     </form> 
     <div class="checkbox-style">
         <input type="checkbox" ng-model="user.remember">
-        <span style="font-size:9px;">Remember me</span>
+        <span style="font-size:12px;">&nbsp;Remember me</span>
     </div>
     <div class="padding">
       <button class="button button-block button-positive" ng-click="submit()">
@@ -69,17 +76,16 @@
           <div class="list" style="padding-top:50px; text-align: center;">
             <h3>Enter your email</h3>
             <label class="item item-input bgt-background">
-              <input type="text">
+              <input type="email" ng-model="email">
             </label>
             <div style="text-align: center;padding-top:20px;">
-              <button class="button  button-positive" ng-click="request()">
+              <button class="button  button-positive" ng-click="request(email)">
                 Request password
               </button>
               <p class="padding">
               <a href="#/sign-in">Sign-In</a>.
             </p>
             </div>
-
           </div>
 
         </ion-content>
@@ -133,10 +139,10 @@
 
     <div class="item item-input bgt-background ">
         <span class="input-label">Country</span>
-        <select style="background-color: transparent;  width:100%;" 
-            ng-init="user.country=CountryList[2]" 
+        <select style="background-color: transparent;  width:100%;"
+            ng-init="user.country=CountryList[2]"
             ng-model="user.country" 
-            ng-options="country.name for country in CountryList">
+            ng-options="country.name for country in CountryList" ng-change="setCountry(user.country.id)">
         </select> 
     </div>
 
@@ -145,12 +151,20 @@
         <select style="background-color: transparent;  width:100%;"
                 ng-init="user.city=CityList[2]"
                 ng-model="user.city"
-                ng-options="city.name for city in CityList">
+                ng-options="city.name for city in CityList" >
         </select>
       </div>
       <div class="item item-input bgt-background">
         <span class="input-label">Street</span>
         <input type="text" ng-model="user.street" >
+      </div>
+      <div class="item item-input bgt-background ">
+        <span class="input-label">Profession</span>
+        <select style="background-color: transparent;  width:100%;"
+                ng-init="user.profession=ProfessionList[2]"
+                ng-model="user.profession"
+                ng-options="profession.name for profession in ProfessionList">
+        </select>
       </div>
 
     <div class="item item-input bgt-background ">
@@ -158,7 +172,7 @@
         <select style="background-color: transparent;  width:100%;" 
             ng-init="user.education=EducationList[2]" 
             ng-model="user.education" 
-            ng-options="education.education for education in EducationList">
+            ng-options="education.name for education in EducationList">
         </select> 
     </div>
     <div class="item item-input bgt-background ">
@@ -166,7 +180,7 @@
         <select style="background-color: transparent;  width:100%;" 
             ng-init="user.sex=SexList[1]" 
             ng-model="user.sex" 
-            ng-options="sex.sex for sex in SexList">
+            ng-options="sex.name for sex in SexList">
         </select> 
     </div>
     </div>
@@ -207,6 +221,16 @@
 
 <script id="home.html" type="text/ng-template">
     <ion-view title="Home">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
+
     <ion-content padding="true">
     <div class="list ">
     
@@ -228,6 +252,15 @@
 
 <script id="facebook.html" type="text/ng-template">
     <ion-view title="Facebook">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content padding="true">
 
     </ion-content>
@@ -236,6 +269,15 @@
 
 <script id="home-selected.html" type="text/ng-template">
     <ion-view title="Ads">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content padding="true" class="bgt-background">
     <ion-slide-box show-pager="false">
 <!-- Need to work with it
@@ -294,27 +336,36 @@
 
 
 <script id="selected-video.html" type="text/ng-template">
-    <ion-view title="Video">
+    <ion-view title="{{viewName}}">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content padding="true">
     <div style="text-align: center;">
         <div ng-if="video">
           <video id="vid" height="240" width="320" controls ng-src="{{ source }}" type="video/mp4" ng-cloak> 
             </video>
-        </div>
-        <div id="AdText">
+          <div id="AdTextVideo">
             <h2>Ad text description</h2>
             <h4>Warious information about this media</h4>
+          </div>
         </div>
-    </div>
-    </div>
-    <div ng-if="image">
+
+      <div ng-if="image">
         <img id="img" height="240px" width="310px" ng-src="{{ source }}" />
-      <div id="AdText">
-        <h2>Ad text description</h2>
-        <h4>Warious information about this media</h4>
+        <div id="AdTextImage">
+          <h2>Ad text description</h2>
+          <h4>Warious information about this media</h4>
+        </div>
       </div>
     </div>
-    </div>
+
 
 
   <!-- fix it -->
@@ -357,12 +408,22 @@
 
 <script id="settings.html" type="text/ng-template">
     <ion-view title="Settings">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content padding="true">
     <div style="text-align:center;">
        <img src="img/ionic.png"/>
     </div>
-    <button class="button button-full button-assertive">
-    Full</button>
+          <button class="button button-full button-positive" ng-click="clear()">
+            Clear user data
+          </button>
     <div class="row">
       <div class="col">
           <button class="button button-full button-assertive">
@@ -384,16 +445,21 @@
       </div>
     </div>
 
-          <button class="button" ng-click="logout()">
-            logout
-          </button>
-
     </ion-content>
     </ion-view>
     </script>
 
 <script id="profile.html" type="text/ng-template">
     <ion-view title="Profile">
+      <ion-nav-buttons side="left">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+          <span>0.15</span>
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+        </button>
+      </ion-nav-buttons>
     <ion-content padding="true">
     <div class="list ">
       <div class="item item-input bgt-background ">
@@ -415,7 +481,7 @@
         <span class="input-label">Country</span>
         <select style="background-color: transparent; width:100%;" 
             ng-model="user.country" 
-            ng-options="country.name for country in CountryList">
+            ng-options="country.name for country in CountryList" ng-change="setCountry(user.country.id)">
         </select> 
 
     </div>
@@ -423,7 +489,7 @@
         <span class="input-label">City</span>
         <select style="background-color: transparent; width:100%;"
                 ng-model="user.city"
-                ng-options="city.name for city in CityList">
+                ng-options="city.id as city.name for city in CityList">
         </select>
       </div>
       <div class="item item-input bgt-background">
@@ -435,19 +501,29 @@
         <span class="input-label">Education</span>
        <select style="background-color: transparent;  width:100%;"
             ng-model="user.education" 
-            ng-options="education.education for education in EducationList">
+            ng-options="education.name for education in EducationList">
         </select>
     </div>
+
+      <div class="item item-input bgt-background ">
+        <span class="input-label">Profession</span>
+        <select style="background-color: transparent;  width:100%;"
+                ng-model="user.profession"
+                ng-options="profession.name for profession in ProfessionList">
+        </select>
+      </div>
+
     <div class="item item-input bgt-background ">
         <span class="input-label">Sex</span>
         <select style="background-color: transparent;  width:100%;" 
             ng-model="user.sex" 
-            ng-options="sex.sex for sex in SexList">
+            ng-options="sex.name for sex in SexList">
         </select> 
     </div>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
+
     <button class="button button-large" style="width:40%;background:#FF7474;color:#FDFDFD;" ng-click="submit()">
     Submit
     </button>

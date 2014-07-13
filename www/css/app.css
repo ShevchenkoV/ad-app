@@ -159,6 +159,15 @@ form .has-success {
     left:0px;
 }
 .checkbox-style{
-    padding-top:5px;
-    padding-left:5px;
+    padding-top:10px;
+    padding-left:10px;
+}
+input[type=checkbox]
+{
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(2); /* IE */
+    -moz-transform: scale(2); /* FF */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    -o-transform: scale(2); /* Opera */
+    padding-right: 10px;
 }
