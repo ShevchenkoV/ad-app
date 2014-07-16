@@ -7,6 +7,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
  <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
+
 </head>
 
 <body ng-app="ads">
@@ -16,6 +17,14 @@
 </ion-nav-bar>
 
 <ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+<script id="image-modal.html" type="text/ng-template">
+  <div class="modal image-modal transparent" ng-click="closeModal()">
+    <ion-pane class="transparent">
+      <img ng-src="{{source}}" class="fullscreen-image"/>
+    </ion-pane>
+  </div>
+</script>
 
 <script id="sign-in.html" type="text/ng-template">
 
@@ -188,9 +197,7 @@
         <button class="button button-block button-positive" ng-click="submit()">
         register
     </button>
-    <button class="button button-block button-positive" ng-click="skip()">
-        skip
-    </button>
+
     </div>
     </ion-content>
     </ion-view>
@@ -223,7 +230,7 @@
     <ion-view title="Home">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -254,7 +261,7 @@
     <ion-view title="Facebook">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -271,7 +278,7 @@
     <ion-view title="Ads">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -293,11 +300,11 @@
       </ion-slide>
 -->
 
-        <ion-slide>
-          <div class="box" ng-if="img">
+        <ion-slide ng-repeat="i in [1,2]" >
+          <div class="box" ng-repeat="item in data | startFrom:$index*pageSize | limitTo:pageSize">
               <div class="boxInner">
-                  <a ng-click="show(data[0].id)">
-                    <img ng-src={{data[0].thumbnail}} />
+                  <a ng-click="show($index)">
+                    <img ng-src={{data[$index].thumbnail}} />
                         <h5 style="margin-top:0px;">Ad text...</h5>
                   </a>
 
@@ -339,7 +346,7 @@
     <ion-view title="{{viewName}}">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -358,14 +365,13 @@
         </div>
 
       <div ng-if="image">
-        <img id="img" height="240px" width="310px" ng-src="{{ source }}" />
+        <img  id="img" height="240px" width="310px" ng-src="{{ source }}" />
         <div id="AdTextImage">
           <h2>Ad text description</h2>
           <h4>Warious information about this media</h4>
         </div>
       </div>
     </div>
-
 
 
   <!-- fix it -->
@@ -406,11 +412,12 @@
     </ion-view>
     </script>
 
+
 <script id="settings.html" type="text/ng-template">
     <ion-view title="Settings">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -453,7 +460,7 @@
     <ion-view title="Profile">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -538,6 +545,7 @@
 <script src="js/app.js"></script>
 <script src="js/openfb-angular.js"></script>
 <script src="js/controllers.js"></script>
+
 
 
 </body>
