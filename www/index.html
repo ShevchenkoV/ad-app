@@ -37,8 +37,8 @@
     <form name="myForm" novalidate>
       <div class="list ">
         <label class="item item-input  validated bgt-background " >
-        <span class="input-label">Email</span>
-        <input type="text" name="email" ng-model="user.email" ng-pattern="emailPattern" required>
+        <span class="input-label">Login</span>
+        <input type="text" name="login" ng-model="user.login" required>
         </label>
 
         <label class="item item-input validated bgt-background">
@@ -83,9 +83,9 @@
     <ion-view title="Forgot Password">
         <ion-content padding="true">
           <div class="list" style="padding-top:50px; text-align: center;">
-            <h3>Enter your email</h3>
+            <h3>Enter username</h3>
             <label class="item item-input bgt-background">
-              <input type="email" ng-model="email">
+              <input type="text" ng-model="email">
             </label>
             <div style="text-align: center;padding-top:20px;">
               <button class="button  button-positive" ng-click="request(email)">
@@ -101,11 +101,46 @@
     </ion-view>
     </script>
 
+<script id="change-password.html" type="text/ng-template">
+  <ion-view title="Change Password">
+    <ion-content padding="true">
+      <form>
+      <div class="list" style="padding-top:50px; text-align: center;">
+
+        <label class="item item-input validated bgt-background">
+          <span class="input-label">Old password</span>
+          <input type="password" name="oldPassword" ng-model="user.oldPassword" ng-minlength="6" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+          <span class="input-label">New password</span>
+          <input type="password" name="password" ng-model="user.password" ng-minlength="6" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+          <span class="input-label">Confirm password</span>
+          <input ng-model="user.passwordConfirm" type="password" data-match="user.password" name="confirmPassword" />
+        </label>
+
+        <div style="text-align: center;padding-top:20px;">
+          <button class="button  button-positive" ng-click="submit()">
+Submit
+          </button>
+        </div>
+      </div>
+      </form>
+
+    </ion-content>
+  </ion-view>
+</script>
+
 <script id="registration.html" type="text/ng-template">
     <ion-view title="Registration">
     <ion-content padding="true">
         <form name="myForm" novalidate>
         <div class="list ">
+          <label class="item item-input validated bgt-background">
+            <span class="input-label">Login</span>
+            <input type="text" name="username" ng-keyup="checkUsername()" ng-model="user.username" ng-pattern="wordPattern" required>
+          </label>
             <label class="item item-input validated bgt-background">
                 <span class="input-label">Email</span>
                 <input type="text" name="email" ng-keyup="checkEmail()" ng-model="user.email" ng-pattern="emailPattern" required>
@@ -118,14 +153,14 @@
                 <span class="input-label">Confirm</span>
                  <input ng-model="user.passwordConfirm" type="password" data-match="user.password" name="confirmPassword" />
             </label>
-            <label class="item item-input validated bgt-background">
+          <!--  <label class="item item-input validated bgt-background">
                 <span class="input-label">First name</span>
                 <input type="text" name="firstName" ng-model="user.firstName" ng-pattern="namePattern" required>
             </label>
             <label class="item item-input validated bgt-background">
                 <span class="input-label">Last name</span>
                 <input type="text" name="lastName" ng-model="user.lastName" ng-pattern="namePattern" required>
-            </label>
+            </label>-->
         </div>
         <div class="padding">
             <button class="button button-block button-positive" ng-click="submit()">
@@ -140,12 +175,20 @@
 <script id="registration2.html" type="text/ng-template">
     <ion-view title="Registration">
     <ion-content padding="true">
+      <form name="myForm" novalidate>
     <div class="list ">
     <div class="item item-input bgt-background">
     <span class="input-label">Date of birth</span>
     <input type="date" ng-model="user.date" >
     </div>
-
+       <label class="item item-input validated bgt-background">
+            <span class="input-label">First name</span>
+            <input type="text" name="firstName" ng-model="user.firstName" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+            <span class="input-label">Last name</span>
+            <input type="text" name="lastName" ng-model="user.lastName" ng-pattern="wordPattern" required>
+        </label>
     <div class="item item-input bgt-background ">
         <span class="input-label">Country</span>
         <select style="background-color: transparent;  width:100%;"
@@ -199,6 +242,7 @@
     </button>
 
     </div>
+        </form>
     </ion-content>
     </ion-view>
     </script>
@@ -375,18 +419,22 @@
 
 
   <!-- fix it -->
-  <h4>{{questions}}</h4>
-    <div class="list">              
-      <label ng-repeat="item in answer" class="item item-radio">
-        <input type="radio" name="group">
-        <div class="item-content" ng-click="click(item['id'])">
-          {{$index+1}})&nbsp;{{item['answer']}}
-        </div>
+      <div ng-if="notShown" ng-cloak>
+        <h4>You must watch media at least {{minPlayingTime}} seconds and answer on questions to earn money</h4>
+        <a style="margin-top:50px;"class="button icon-left ion-chevron-left button-clear button-dark" href="#/tab/home">Back</a>
 
-        <i class="radio-icon ion-checkmark"></i>
-      </label>
-    </div>
+      </div>
+        <h4>{{questions}}</h4>
+          <div class="list">
+            <label ng-repeat="item in answer" class="item item-radio">
+              <input type="radio" name="group">
+              <div class="item-content" ng-click="click(item['id'])">
+                {{$index+1}})&nbsp;{{item['answer']}}
+              </div>
 
+              <i class="radio-icon ion-checkmark"></i>
+            </label>
+          </div>
     </ion-content>
      <ion-footer-bar align-title="left" class="bar-assertive">
     <ion-tabs class="tabs-icon-top bgt-background">
@@ -431,11 +479,11 @@
           <button class="button button-full button-positive" ng-click="clear()">
             Clear user data
           </button>
-    <div class="row">
-      <div class="col">
-          <button class="button button-full button-assertive">
-              Full</button>
+
+      <div  style="text-align:center;">
+        <a href="#/change-password"> Change Password</a>
       </div>
+    <div class="row">
       <div class="col">
           <button class="button button-full button-assertive">
               Full</button>
@@ -472,12 +520,12 @@
       <div class="item item-input bgt-background ">
         <span class="input-label">Firstname</span>
         <input type="text"
-               ng-model="user.first_name">
+               ng-model="user.firstName">
       </div>
       <div class="item item-input bgt-background ">
         <span class="input-label">Lastname</span>
         <input type="text"
-               ng-model="user.last_name">
+               ng-model="user.lastName">
       </div>
     <div class="item item-input bgt-background">
     <span class="input-label">Date of birth</span>
