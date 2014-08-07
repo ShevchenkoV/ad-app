@@ -72,20 +72,13 @@
 body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {
     margin-bottom: 0;
 }
-@media only screen and (max-width : 480px) {
-    /* Smartphone view: 1 tile */
+
     .box {
         width: 33.3%;
         padding-bottom: 33.3%;
     }
-}
-@media only screen and (max-width : 650px) and (min-width : 481px) {
-    /* Tablet view: 2 tiles */
-    .box {
-        width: 50%;
-        padding-bottom: 50%;
-    }
-}
+
+
 
 .bar h1{
 color:#F6F3F3;

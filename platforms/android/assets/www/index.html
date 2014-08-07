@@ -7,6 +7,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
  <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
+
 </head>
 
 <body ng-app="ads">
@@ -15,7 +16,15 @@
 
 </ion-nav-bar>
 
-<ion-nav-view animation="slide-left-right"></ion-nav-view>
+<ion-nav-view ></ion-nav-view>
+
+<script id="image-modal.html" type="text/ng-template">
+  <div class="modal image-modal transparent" ng-click="closeModal()">
+    <ion-pane class="transparent">
+      <img ng-src="{{source}}" class="fullscreen-image"/>
+    </ion-pane>
+  </div>
+</script>
 
 <script id="sign-in.html" type="text/ng-template">
 
@@ -28,8 +37,8 @@
     <form name="myForm" novalidate>
       <div class="list ">
         <label class="item item-input  validated bgt-background " >
-        <span class="input-label">Email</span>
-        <input type="text" name="email" ng-model="user.email" ng-pattern="emailPattern" required>
+        <span class="input-label">Login</span>
+        <input type="text" name="login" ng-model="user.login" required>
         </label>
 
         <label class="item item-input validated bgt-background">
@@ -60,12 +69,8 @@
     </div>
     
       <div>
-         <a href="#/tab/home">Button for development login</a>
-         <a href="#/registration">Registration 1</a>
-        <a href="#/registration2">Registration 2</a>
-        <a href="#/home-selected">selected</a>
+        <a href="#/new">New screen</a>
       </div>
-
     </ion-content>
     </ion-view>
     </script>
@@ -74,9 +79,9 @@
     <ion-view title="Forgot Password">
         <ion-content padding="true">
           <div class="list" style="padding-top:50px; text-align: center;">
-            <h3>Enter your email</h3>
+            <h3>Enter email</h3>
             <label class="item item-input bgt-background">
-              <input type="email" ng-model="email">
+              <input type="text" ng-model="email">
             </label>
             <div style="text-align: center;padding-top:20px;">
               <button class="button  button-positive" ng-click="request(email)">
@@ -92,11 +97,42 @@
     </ion-view>
     </script>
 
+<script id="change-password.html" type="text/ng-template">
+  <ion-view title="Change Password">
+    <ion-content padding="true">
+      <form name="change" ng-submit="change.$valid && submit()"novalidate>
+      <div class="list" style="padding-top:50px; text-align: center;">
+
+        <label class="item item-input validated bgt-background">
+          <input type="password" placeholder="Old password" name="oldPassword" ng-model="user.oldPassword" ng-minlength="6" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+          <input type="password" placeholder="New password" name="password" ng-model="user.password" ng-minlength="6" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+          <input ng-model="user.passwordConfirm" placeholder="Confirm password" type="password" data-match="user.password" name="confirmPassword" />
+        </label>
+        <div style="text-align: center;padding-top:20px;">
+          <button class="button  button-positive" type="submit">
+Submit
+          </button>
+        </div>
+      </div>
+      </form>
+
+    </ion-content>
+  </ion-view>
+</script>
+
 <script id="registration.html" type="text/ng-template">
     <ion-view title="Registration">
     <ion-content padding="true">
         <form name="myForm" novalidate>
         <div class="list ">
+          <label class="item item-input validated bgt-background">
+            <span class="input-label">Login</span>
+            <input type="text" name="username" ng-keyup="checkUsername()" ng-model="user.username" ng-pattern="wordPattern" required>
+          </label>
             <label class="item item-input validated bgt-background">
                 <span class="input-label">Email</span>
                 <input type="text" name="email" ng-keyup="checkEmail()" ng-model="user.email" ng-pattern="emailPattern" required>
@@ -109,14 +145,14 @@
                 <span class="input-label">Confirm</span>
                  <input ng-model="user.passwordConfirm" type="password" data-match="user.password" name="confirmPassword" />
             </label>
-            <label class="item item-input validated bgt-background">
+          <!--  <label class="item item-input validated bgt-background">
                 <span class="input-label">First name</span>
                 <input type="text" name="firstName" ng-model="user.firstName" ng-pattern="namePattern" required>
             </label>
             <label class="item item-input validated bgt-background">
                 <span class="input-label">Last name</span>
                 <input type="text" name="lastName" ng-model="user.lastName" ng-pattern="namePattern" required>
-            </label>
+            </label>-->
         </div>
         <div class="padding">
             <button class="button button-block button-positive" ng-click="submit()">
@@ -131,12 +167,20 @@
 <script id="registration2.html" type="text/ng-template">
     <ion-view title="Registration">
     <ion-content padding="true">
+      <form name="myForm" novalidate>
     <div class="list ">
     <div class="item item-input bgt-background">
     <span class="input-label">Date of birth</span>
     <input type="date" ng-model="user.date" >
     </div>
-
+       <label class="item item-input validated bgt-background">
+            <span class="input-label">First name</span>
+            <input type="text" name="firstName" ng-model="user.firstName" ng-pattern="wordPattern" required>
+        </label>
+        <label class="item item-input validated bgt-background">
+            <span class="input-label">Last name</span>
+            <input type="text" name="lastName" ng-model="user.lastName" ng-pattern="wordPattern" required>
+        </label>
     <div class="item item-input bgt-background ">
         <span class="input-label">Country</span>
         <select style="background-color: transparent;  width:100%;"
@@ -188,10 +232,9 @@
         <button class="button button-block button-positive" ng-click="submit()">
         register
     </button>
-    <button class="button button-block button-positive" ng-click="skip()">
-        skip
-    </button>
+
     </div>
+        </form>
     </ion-content>
     </ion-view>
     </script>
@@ -223,7 +266,7 @@
     <ion-view title="Home">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -254,7 +297,7 @@
     <ion-view title="Facebook">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -267,11 +310,46 @@
     </ion-view>
     </script>
 
+<script id="new.html" type="text/ng-template">
+  <ion-view title="Screen">
+    <ion-nav-buttons side="left">
+      <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
+        <span>{{balance}}</span>
+      </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+      <button style="color:#F8E9E9;" class="button button-icon icon ion-log-out" ng-click="logout()">
+      </button>
+    </ion-nav-buttons>
+    <ion-content padding="true">
+      <div style="margin-top:20%;">
+        <button class="button button-block button-positive" ng-click="viewAds()">
+          View Ads
+          </button><button class="button button-block button-positive">
+        Perform Tasks
+          </button><button class="button button-block button-positive">
+        Personal Information
+        </button>
+      </div>
+    </ion-content>
+  </ion-view>
+  <div class="tabs tabs-icon-top">
+    <a class="tab-item">
+      <i class="icon ion-help-circled"></i>
+     FAQ
+    </a>
+    <a class="tab-item">
+      <i class="icon ion-settings"></i>
+      T&C
+    </a>
+  </div>
+</script>
+
 <script id="home-selected.html" type="text/ng-template">
     <ion-view title="Ads">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -279,7 +357,7 @@
         </button>
       </ion-nav-buttons>
     <ion-content padding="true" class="bgt-background">
-    <ion-slide-box show-pager="false">
+    <ion-slide-box show-pager="true" on-slide-changed="change(index)">
 <!-- Need to work with it
       <ion-slide ng-repeat="i in getTimes() track by $index">
       <div class="box" ng-repeat="item in data | startFrom:$index*pageSize | limitTo:pageSize">
@@ -293,17 +371,18 @@
       </ion-slide>
 -->
 
-        <ion-slide>
-          <div class="box" ng-if="img">
+        <ion-slide ng-repeat="i in [1,2,3]" >
+          <div class="box" ng-repeat="item in data | startFrom:currentPage*pageSize | limitTo:pageSize">
               <div class="boxInner">
-                  <a ng-click="show(data[0].id)">
-                    <img ng-src={{data[0].thumbnail}} />
-                        <h5 style="margin-top:0px;">Ad text...</h5>
+                  <a ng-click="show($index+currentPage*pageSize)">
+                    <img ng-src={{data[$index+currentPage*pageSize].thumbnail}} />
+                        <h5 style="margin-top:0px;">{{$index+1+(currentPage*pageSize)}}.Ad text</h5>
                   </a>
 
             </div>
 
             </div>
+
       </ion-slide>
 
     </ion-slide-box>
@@ -339,7 +418,7 @@
     <ion-view title="{{viewName}}">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -358,7 +437,7 @@
         </div>
 
       <div ng-if="image">
-        <img id="img" height="240px" width="310px" ng-src="{{ source }}" />
+        <img  id="img" height="240px" width="310px" ng-src="{{ source }}" />
         <div id="AdTextImage">
           <h2>Ad text description</h2>
           <h4>Warious information about this media</h4>
@@ -367,20 +446,23 @@
     </div>
 
 
-
   <!-- fix it -->
-  <h4>{{questions}}</h4>
-    <div class="list">              
-      <label ng-repeat="item in answer" class="item item-radio">
-        <input type="radio" name="group">
-        <div class="item-content" ng-click="click(item['id'])">
-          {{$index+1}})&nbsp;{{item['answer']}}
-        </div>
+      <div ng-if="notShown" ng-cloak>
+        <h4>You must watch media at least {{minPlayingTime}} seconds and answer on questions to earn money</h4>
+        <a style="margin-top:50px;"class="button icon-left ion-chevron-left button-clear button-dark" href="#/tab/home">Back</a>
 
-        <i class="radio-icon ion-checkmark"></i>
-      </label>
-    </div>
+      </div>
+        <h4>{{questions}}</h4>
+          <div class="list">
+            <label ng-repeat="item in answer" class="item item-radio">
+              <input type="radio" name="group">
+              <div class="item-content" ng-click="click(item['id'])">
+                {{$index+1}})&nbsp;{{item['answer']}}
+              </div>
 
+              <i class="radio-icon ion-checkmark"></i>
+            </label>
+          </div>
     </ion-content>
      <ion-footer-bar align-title="left" class="bar-assertive">
     <ion-tabs class="tabs-icon-top bgt-background">
@@ -406,11 +488,12 @@
     </ion-view>
     </script>
 
+
 <script id="settings.html" type="text/ng-template">
     <ion-view title="Settings">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -424,11 +507,11 @@
           <button class="button button-full button-positive" ng-click="clear()">
             Clear user data
           </button>
-    <div class="row">
-      <div class="col">
-          <button class="button button-full button-assertive">
-              Full</button>
+
+      <div  style="text-align:center;">
+        <a href="#/change-password"> Change Password</a>
       </div>
+    <div class="row">
       <div class="col">
           <button class="button button-full button-assertive">
               Full</button>
@@ -453,7 +536,7 @@
     <ion-view title="Profile">
       <ion-nav-buttons side="left">
         <button style="color:#F8E9E9;" class="button button-icon icon ion-social-usd">
-          <span>0.15</span>
+          <span>{{balance}}</span>
         </button>
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
@@ -465,12 +548,12 @@
       <div class="item item-input bgt-background ">
         <span class="input-label">Firstname</span>
         <input type="text"
-               ng-model="user.first_name">
+               ng-model="user.firstName">
       </div>
       <div class="item item-input bgt-background ">
         <span class="input-label">Lastname</span>
         <input type="text"
-               ng-model="user.last_name">
+               ng-model="user.lastName">
       </div>
     <div class="item item-input bgt-background">
     <span class="input-label">Date of birth</span>
@@ -538,6 +621,7 @@
 <script src="js/app.js"></script>
 <script src="js/openfb-angular.js"></script>
 <script src="js/controllers.js"></script>
+
 
 
 </body>

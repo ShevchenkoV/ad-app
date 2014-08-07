@@ -1,7 +1,7 @@
 angular.module('ads', ['ionic', 'openfb', 'ngResource'])
 
 .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
-        $rootScope.globalServerUrl="http://lodge39.com";
+      $rootScope.globalServerUrl="http://lodge39.com";
     //  $rootScope.globalServerUrl="http://77.121.81.147";
       $rootScope.logged=localStorage.getItem("logged");
         OpenFB.init('803761662981098');
@@ -84,6 +84,9 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
         .state('tabs', {
                url: "/tab", abstract: true, templateUrl: "tabs.html"})
 
+        .state('change-password', {
+          url: "/change-password", templateUrl: "change-password.html",controller:"ChangePasswordCtrl"})
+
         .state('tabs.home', {
                url: "/home", 
                 views: {'home-tab': { 
@@ -137,14 +140,14 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                     $state.go('tabs.home');
                   },
                   function () {
-                   window.plugins.toast.show('Fblogin error', 'short', 'center');
+                 //  window.plugins.toast.show('Fblogin error', 'short', 'center');
                   });
             };
 
             $scope.submit=function(){
               var data=JSON.stringify($scope.user);
               if(localStorage.getItem("logged")===null){
-       //  window.plugins.toast.show('Loading...', 'short', 'center');
+           // window.plugins.toast.show('Loading...', 'short', 'center');
               }
               $http({
                   url: url,
@@ -166,7 +169,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                      $state.go('tabs.home');
                   }
                   else{
-  //window.plugins.toast.show('Incorrect login or password', 'long', 'bottom');
+ // window.plugins.toast.show('Incorrect login or password', 'long', 'bottom');
                    // $state.go('signin');
                   }                    
                 }).error(function(){
@@ -192,10 +195,10 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
          data: 'data='+JSON.stringify(data)
        }).success(function(data){
          if(!data.resetPassword){
-          // window.plugins.toast.show('Sorry, your email not founded in database', 'long', 'bottom');
+         //  window.plugins.toast.show('Sorry, your email not founded in database', 'long', 'bottom');
          }
          else{
-         //  window.plugins.toast.show('Your new password sended to your email', 'long', 'bottom');
+           window.plugins.toast.show('Your new password sended to your email', 'long', 'bottom');
            $state.go('signin');
          }
        });
@@ -343,10 +346,10 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
           headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
           data: "data="+encodeURIComponent(JSON.stringify(profileData))
       }).success(function(){
-    //  window.plugins.toast.show('Profile updated', 'short', 'center');
+  //    window.plugins.toast.show('Profile updated', 'short', 'center');
         $state.go('tabs.home');
       }).error(function(){
-    //   window.plugins.toast.show('Error', 'short', 'center');
+   //    window.plugins.toast.show('Error', 'short', 'center');
       });
     };
 
@@ -360,7 +363,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
             })
 
 .controller('RegistrationCtrl', function($scope, $http,$location,IdService, $rootScope) {
-            var x;
+            var x,y;
             var serverUrl=$rootScope.globalServerUrl;
             $scope.user={}; 
 
@@ -370,11 +373,14 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
 
             $scope.checkEmail=function(){
                 var url=serverUrl+'/profile/checkEmail/';
-                var check=encodeURIComponent('{"email":"'+$scope.user.email +'"}');
-
-                var emailCheck=$http({method:"GET",url:url+check})
-                 .success(function(data){
-                  if(data.checkEmail==="false"){
+                var check=$scope.user.email;
+              $http({
+                url: url,
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                data: "data="+JSON.stringify(check)
+              }).success(function(data){
+                  if(!data.checkEmail){
                     x=0;
                   } 
                   else {
@@ -382,12 +388,34 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                   } 
                 });
             };
+            $scope.checkUsername=function(){
+              var url=serverUrl+'/profile/checkUsername/';
+              var check=$scope.user.username;
+              $http({
+                url: url,
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                data: "data="+JSON.stringify(check)
+              }).success(function(data){
+                if(!data.checkUsername){
+                  y=0;
+                }
+                else {
+                  y=1;
+                }
+              });
+            };
 
             $scope.submit=function(){
                 var data=$scope.user;
                 var url=serverUrl+'/profile/registrationFirstStep/';
+                if(!y){
+                 // window.plugins.toast.show('Current username already taken', 'short', 'center');
+                  console.log('username taken');
+                }
                 if(!x){
-                  console.log('Current email already taken');
+                 // window.plugins.toast.show('Current email already taken', 'short', 'center');
+                  console.log('email taken');
                 }
                 else{
                   $http({
@@ -399,9 +427,10 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
                     console.log(data);
                     localStorage.setItem("id",data.id);
                     localStorage.setItem("email",$scope.user.email);
+                    $location.path('/registration2');
                   });
 
-                $location.path('/registration2');
+
                 }
               };
                 
@@ -519,6 +548,49 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
   };
 })
 
+.controller('ChangePasswordCtrl',function($scope,$http,$rootScope, $state){
+      $scope.user={};
+      $scope.wordPattern=/^[a-zA-Z0-9]+$/; //password regexp
+      var email=localStorage.getItem("email");
+      var url=$rootScope.globalServerUrl+'/profile/updatePassword/';
+
+
+
+      $scope.submit=function(){
+        $scope.data={
+          login:localStorage.getItem("email"),
+          password:$scope.user.oldPassword
+        };
+        console.log("login:"+$scope.data);
+        $http({
+          url: $rootScope.globalServerUrl+'/profile/login/',
+          method: "POST",
+          headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+          data: "data=" + JSON.stringify($scope.data)
+        }).success(function(data){
+          $scope.update={
+              password:$scope.user.password,
+              email:localStorage.getItem("email"),
+              token:data.token
+          }
+          console.log("update:"+$scope.update);
+          $http({
+            url: url,
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            data: "data=" + JSON.stringify($scope.update)
+          }).success(function(data){
+           // window.plugins.toast.show('Updated', 'short', 'center');
+            $state.go('tabs.home');
+          });
+        });
+
+      }
+
+
+
+})
+
 .controller('SelectedVideoCtrl', function($scope,HomeService, BalanceService, $ionicPopup,$ionicModal, $ionicSlideBoxDelegate,$location, $state, $timeout ,$sce,$rootScope,$http) {
 
       $scope.counter = 0;
@@ -577,7 +649,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
     }
 
   else{
-    if(device.platform==="Android"){
+    /*if(device.platform==="Android"){
       $scope.video="false";
 
       $scope.adCounter = 0;
@@ -626,7 +698,7 @@ angular.module('ads', ['ionic', 'openfb', 'ngResource'])
           }
         }, false);
       }, 0);
-    }
+    //}
  };
 function asd(){
 
@@ -648,10 +720,10 @@ function asd(){
                 }).success(function (data) {
                   if(data.hit===true){
                     BalanceService.setBalance(data.balance/100);
-                  //  window.plugins.toast.show('Right answer', 'short', 'center');
+              //      window.plugins.toast.show('Right answer', 'short', 'center');
                   }
                   else{
-                  //  window.plugins.toast.show('Wrong answer', 'short', 'center');
+                    window.plugins.toast.show('Wrong answer', 'short', 'center');
                   }
                   readyState = true;
                   $state.go('tabs.home');

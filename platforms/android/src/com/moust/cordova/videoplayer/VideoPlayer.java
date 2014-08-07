@@ -203,8 +203,10 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         return false;
     }
 
-    @Override
+    @Override   //need to fix it
     public void onPrepared(MediaPlayer mp) {
+        int height=mp.getVideoHeight();
+        videoView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,height*2));
         mp.start();
     }
 

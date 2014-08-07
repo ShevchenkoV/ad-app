@@ -13,19 +13,19 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"VideoPlayer\"><param name=\"android-package\" value=\"com.moust.cordova.videoplayer.VideoPlayer\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+                            "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
+                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -37,19 +37,19 @@
         "com.ionic.keyboard": {
             "PACKAGE_NAME": "com.ionicframework.starter"
         },
+        "com.moust.cordova.videoplayer": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "nl.x-services.plugins.toast": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
         "org.apache.cordova.console": {
             "PACKAGE_NAME": "com.ionicframework.starter"
         },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.ionicframework.starter"
         },
-        "com.moust.cordova.videoplayer": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
         "org.apache.cordova.inappbrowser": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "com.ionicframework.starter"
         }
     },
